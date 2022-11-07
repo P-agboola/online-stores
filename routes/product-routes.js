@@ -9,7 +9,7 @@ const {
   productByID,
   listproductByShop,
   listbyLatest,
-} = require("../controllers/product.controller");
+} = require("../controllers/product-controller");
 const router = express.Router();
 
 router

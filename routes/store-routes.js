@@ -1,11 +1,11 @@
 const {
-  createShop,
-  editShop,
-  getShopByName,
-  getAllShops,
-  uploadShopImage,
   resizeImage,
-  deleteShop,
+  uploadStoreImage,
+  editStore,
+  deleteStore,
+  createStore,
+  getAllStores,
+  getStoreByName,
 } = require("../controllers/shop-controllers");
 const express = require("express");
 const { protect, restrictTo } = require("../controllers/auth-contoller");
@@ -16,21 +16,21 @@ router
   .patch(
     protect,
     restrictTo("admin", "shopOwner"),
-    uploadShopImage,
+    uploadStoreImage,
     resizeImage,
-    editShop
+    editStore
   )
-  .delete(protect, restrictTo("admin", "shopOwner"), deleteShop);
+  .delete(protect, restrictTo("admin", "shopOwner"), deleteStore);
 router
   .route("/")
   .post(
     protect,
-    restrictTo("admin", "shopOwner"),
-    uploadShopImage,
+    restrictTo("admin", "storeOwner"),
+    uploadStoreImage,
     resizeImage,
-    createShop
+    createStore
   )
-  .get(getAllShops);
-router.route("/: name").get(getShopByName);
+  .get(getAllStores);
+router.route("/: name").get(getStoreByName);
 
 module.exports = router;

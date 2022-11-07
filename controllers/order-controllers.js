@@ -1,8 +1,8 @@
-const Order = require("../models/Order");
+const Order = require("../models/Order-model");
 const CatchAsync = require("../utils/catch-async");
 const QueryMethod = require("../utils/query");
 const express = require("express");
-const cart = require("../models/Cart");
+const cart = require("../models/Cart-model");
 const Flutterwave = require("flutterwave-node-v3");
 fs = require("fs");
 const nodemailer = require("nodemailer");

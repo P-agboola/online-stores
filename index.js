@@ -10,7 +10,7 @@ const productRouter = require("./routes/product-routes");
 const userRouter = require("./routes/user-routes");
 const cartRouter = require("./routes/cart-routes");
 const orderRoutes = require("./routes/order-routes");
-const shopRoutes = require("./routes/shop-routes");
+const storeRoutes = require("./routes/store-routes");
 
 app.use(express.json());
 app.use(cors());
@@ -25,7 +25,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/carts", cartRouter);
 app.use("/api/v1/orders", orderRoutes);
-app.use("/api/v1/stores", shopRoutes);
+app.use("/api/v1/stores", storeRoutes);
 
 app.all("*", (req, res, next) => {
   const err = new ErrorObject(`http:localhost:6000${req.url} not found`, 404);
