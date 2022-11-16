@@ -315,3 +315,5 @@
 ::1 - - [16/Nov/2022:21:12:13 +0000] "POST /api/v1/stores HTTP/1.1" 500 161 "-" "PostmanRuntime/7.29.2"
 ::1 - - [16/Nov/2022:21:14:40 +0000] "POST /api/v1/stores HTTP/1.1" 200 514 "-" "PostmanRuntime/7.29.2"
 ::1 - - [16/Nov/2022:21:20:27 +0000] "GET /api/v1/stores/633ae39ed85fc9d5a07b7ade HTTP/1.1" 404 1409 "-" "PostmanRuntime/7.29.2"
+::1 - - [16/Nov/2022:21:30:40 +0000] "GET /api/v1/stores/633ae39ed85fc9d5a07b7ade HTTP/1.1" 400 398 "-" "PostmanRuntime/7.29.2"
+::1 - - [16/Nov/2022:21:31:17 +0000] "GET /api/v1/stores/637552c0aaf20e9fe38e0630 HTTP/1.1" 200 463 "-" "PostmanRuntime/7.29.2"
