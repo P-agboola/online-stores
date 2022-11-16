@@ -32,9 +32,9 @@ const userSchema = new mongoose.Schema(
           "Password must contain at least a number, a lowercase and an uppercase alphabeth",
       },
     },
-    passwordConfirm: {
+    confirmPassword: {
       type: String,
-      required: [true, "A user must have an passwordConfirm"],
+      required: [true, "A user must have an confirmPassword"],
       validate: {
         validator: function (val) {
           return val === this.password;
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       default: "user",
-      enum: ["user", "admin", "shopOwner"],
+      enum: ["user", "admin", "storeOwner"],
     },
     passwordResetToken: String,
     passwordChangedAt: Date,
@@ -66,7 +66,7 @@ userSchema.pre("save", async function (next) {
   }
   let salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  this.passwordConfirm = undefined;
+  this.confirmPassword = undefined;
   next();
 });
 

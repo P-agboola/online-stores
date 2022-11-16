@@ -4,15 +4,17 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
-const { model } = require("mongoose");
+
 const ErrorObject = require("./utils/error");
 const productRouter = require("./routes/product-routes");
 const userRouter = require("./routes/user-routes");
 const cartRouter = require("./routes/cart-routes");
 const orderRoutes = require("./routes/order-routes");
 const storeRoutes = require("./routes/store-routes");
+const ErrorHandler = require("./controllers/error-controllers");
 
-app.use(express.json());
+// body parser
+app.use(express.json());    
 app.use(cors());
 
 let accessLogStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
@@ -32,6 +34,6 @@ app.all("*", (req, res, next) => {
   next(err);
 });
 
-app.use(ErrorObject);
+app.use(ErrorHandler);
 
 module.exports = app;

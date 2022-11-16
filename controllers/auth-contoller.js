@@ -37,30 +37,42 @@ const createAndSendToken = CatchAsync(async (user, statusCode, res) => {
   });
 });
 
-// sign up user
+// sign up
 exports.signUp = CatchAsync(async (req, res, next) => {
-  const { email, fullName, phoneNumber, password, passwordConfirm, role } =
+  const { email, fullName, phoneNumber, password, confirmPassword, role } =
     req.body;
+  const emailExists = await User.findOne({ email: email });
+  if (emailExists) {
+    return next(new ErrorObject("Email already exist", 409));
+  }
+  if (password !== confirmPassword) {
+    return next(new ErrorObject("Wrong Password Confirmation input", 400));
+  }
   const user = await User.create({
     email,
     fullName,
     phoneNumber,
     password,
-    passwordConfirm,
+    confirmPassword,
     role,
   });
   createAndSendToken(user, 201, res);
 });
 
-// Sign In User
+// sign in
 exports.signIn = CatchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return next(new ErrorObject("Please enter your email and password", 400));
   }
   const user = await User.findOne({ email }).select("+password");
-  const newPasswordConfirm = await bcrypt.compare(password, user.password);
-  if (!newPasswordConfirm || !user) {
+  if (!user) {
+    return next(
+      new ErrorObject("There is no user with the provided email address", 404)
+    );
+  }
+  const newConfirmPassword = await bcrypt.compare(password, user.password);
+  if (!newConfirmPassword || !user) {
     return next(new ErrorObject("Invalid email or password", 401));
   }
 
@@ -153,7 +165,7 @@ exports.resetPassword = CatchAsync(async (req, res, next) => {
   }
 
   user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.confirmPassword = req.body.confirmPassword;
   user.passwordResetToken = undefined;
   user.passwordTokenExpires = undefined;
   user.passwordChangedAt = Date.now() - 1000;
@@ -164,13 +176,13 @@ exports.resetPassword = CatchAsync(async (req, res, next) => {
 
 exports.updatePassword = CatchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
-  const { newPassword, newPasswordConfirm } = req.body;
+  const { newPassword, newConfirmPassword } = req.body;
   if (!(await bcrypt.compare(req.body.password, user.password))) {
     return next(new ErrorObject("Your password is incorrect", 401));
   }
 
   user.password = newPassword;
-  user.passwordConfirm = newPasswordConfirm;
+  user.confirmPassword = newConfirmPassword;
   await user.save();
 
   createAndSendToken(user, 200, res);

@@ -7,17 +7,21 @@ const QueryMethod = require("../utils/query");
 
 //Create Order
 exports.createCart = catchAsync(async (req, res, next) => {
-  const { productId, quantity } = req.body;
+  const { productId, quantity,storeId } = req.body;
   const userId = req.user.id;
+  const userCart = await Cart.findOne({userId, storeId})
 
-  const prod = await Product.findById(productId);
-  unitPrice = prod.amount;
-
-  if (!prod.available) {
-    return next(
-      new ErrorObject(`The product ${prod.name} is not available`, 400)
-    );
+  if(userCart){
+    return next(ErrorObject("no cart"),400)
   }
+  const prod = await Product.findById(productId);
+  unitPrice = prod.price;
+
+  // if (!prod.available) {
+  //   return next(
+  //     new ErrorObject(`The product ${prod.name} is not available`, 400)
+  // //   );
+  // }
 
   if (prod.quantity < quantity) {
     return next(
@@ -36,6 +40,7 @@ exports.createCart = catchAsync(async (req, res, next) => {
     quantity,
     unitPrice,
     amount,
+    storeId,
   });
   const myOrder = await Order.findOne({ userId: req.user.id });
   if (!myOrder) {
@@ -45,7 +50,7 @@ exports.createCart = catchAsync(async (req, res, next) => {
       totalAmount: amount,
     });
   } else {
-    let cart_Id = [myOrder.cartId, cart.id];
+    let cart_Id = [...myOrder.cartId, cart.id];
     let totalAmount = myOrder.totalAmount + amount;
     const update = {
       totalAmount,

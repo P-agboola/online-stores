@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Seamfix-Nextgen/E-Stores#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.32.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -27,6 +28,7 @@
     "mongoose": "^6.6.5",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "node-geocoder": "^4.2.0",
     "nodemailer": "^6.8.0",
     "sharp": "^0.31.1",
     "validator": "^13.7.0"

@@ -36,11 +36,12 @@ exports.updateUser = CatchAsync(async (req, res, next) => {
   const email = req.body.email === undefined ? user.email : req.body.email;
   const fullName =
     req.body.fullName === undefined ? user.fullName : req.body.fullName;
+  const role = req.body.role === undefined ? user.role : req.body.role;
   const phoneNumber =
     req.body.phoneNumber === undefined
       ? user.phoneNumber
       : req.body.phoneNumber;
-  const update = { email, fullName, phoneNumber };
+  const update = { email, fullName, phoneNumber, role };
   const updatedUser = await User.findByIdAndUpdate(req.params.id, update, {
     new: true,
     runValidators: true,

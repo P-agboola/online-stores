@@ -6,9 +6,9 @@ const { port, DB_URL } = process.env;
 
 mongoose
   .connect(DB_URL)
-  .then(() => console.log("connected"))
+  .then(() => console.log(`MongoDb Connected`))
   .catch((err) => console.log(err));
 
-app.listen(port, () => {
-  console.log("server is up and running");
+app.listen(port || 3001, () => {
+  console.log(`server running in ${process.env.NODE_ENV} mode on port ${port}`);
 });

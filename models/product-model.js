@@ -8,13 +8,15 @@ const ProductSchema = new mongoose.Schema(
     },
     image: {
       type: String,
+      trim: true,
+      required: [true, "a product must have an image"],
     },
     description: {
       type: String,
       trim: true,
     },
     category: {
-      type: String,
+      type: [String],
     },
     quantity: {
       type: Number,
@@ -25,7 +27,7 @@ const ProductSchema = new mongoose.Schema(
       required: "Price is required",
     },
 
-    shop: { type: mongoose.Schema.ObjectId, ref: "Shop" },
+    store: { type: mongoose.Schema.ObjectId, ref: "Store" },
   },
   { timestamps: true }
 );
