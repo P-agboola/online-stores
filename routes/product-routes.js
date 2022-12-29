@@ -5,17 +5,17 @@ const {
   createAProduct,
   deleteProduct,
   updateProduct,
-  listproductByShop,
   listbyLatest,
-  uploadProductImage,
-  resizeImage,
   getAllProduct,
   getOneProduct,
+  listproductByStore,
+  uploadProductImage,
+  resizeImage,
 } = require("../controllers/product-controller");
 const router = express.Router();
 
 router
-  .route("/")
+  .route("/:storeID")
   .post(
     protect,
     restrictTo("storeOwner"),
@@ -26,7 +26,9 @@ router
   .get(getAllProduct);
 router
   .route("/:id")
-  .delete(protect, restrictTo("admin", "storeOwner"), deleteProduct)
+  .delete(protect, restrictTo("admin", "storeOwner"), deleteProduct);
+router
+  .route("/:storeID/:id")
   .patch(
     protect,
     restrictTo("admin", "storeOwner"),
@@ -36,7 +38,7 @@ router
   )
   .get(getOneProduct);
 router.route("/:category").get(listByCategories);
-router.route("/:shop").get(listproductByShop);
+router.route("/store/:storeID").get(listproductByStore);
 router.route("/:latest").get(listbyLatest);
 
 module.exports = router;

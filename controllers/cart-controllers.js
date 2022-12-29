@@ -10,8 +10,7 @@ exports.createCart = catchAsync(async (req, res, next) => {
   const { productId, quantity,storeId } = req.body;
   const userId = req.user.id;
   const userCart = await Cart.findOne({userId, storeId})
-
-  if(userCart){
+  if(!userCart){
     return next(ErrorObject("no cart"),400)
   }
   const prod = await Product.findById(productId);

@@ -38,41 +38,52 @@ exports.getAllOrder = CatchAsync(async (req, res, next) => {
 
 exports.checkout = CatchAsync(async (req, res, next) => {
   const flw = new Flutterwave(FLW_PUBLIC_KEY, FLW_SECRET_KEY);
-  const payload = {
-    card_number: req.card_number,
-    cvv: req.cvv,
-    expiry_month: req.expiry_month,
-    expiry_year: req.expiry_year,
-    currency: "NGN",
-    amount: req.amount,
-    fullname: `${user.lastName} ${user.firstName}`,
-    email: user.email,
-    enckey: FLW_ENCRYPTION_KEY,
-    tx_ref: `${user.lastName}-${Date.now()}-${req.amount}`,
-  };
-
-  const response = await flw.Charge.card(payload);
-  // Authorizing transactions
-  // For PIN transactions
-  if (response.meta.authorization.mode === "pin") {
-    let payload2 = payload;
-    payload2.authorization = {
-      mode: "pin",
-      fields: ["pin"],
-      pin: req.pin,
+  const userID = req.user._id;
+  const user = req.user;
+  const order = await Order.findOne({ userID });
+  if (order) {
+    let payload = {
+      card_number: req.body.card_number,
+      cvv: req.body.cvv,
+      expiry_month: req.body.expiry_month,
+      expiry_year: req.body.expiry_year,
+      currency: "NGN",
+      amount: order.totalAmount,
+      fullname: `${user.lastName} ${user.firstName}`,
+      email: user.email,
+      enckey: FLW_ENCRPYTION_KEY,
+      tx_ref: `${user.lastName}-${Date.now()}-${order.totalAmount}`,
     };
-    const reCallCharge = await flw.Charge.card(payload2);
+    const response = await flw.Charge.card(payload);
+    // Authorizing transactions
+    // For PIN transactions
+    if (response.meta.authorization.mode === "pin") {
+      let payload2 = payload;
+      payload2.authorization = {
+        mode: "pin",
+        fields: ["pin"],
+        pin: 3310,
+      };
+      const reCallCharge = await flw.Charge.card(payload2);
 
-    // Add the OTP to authorize the transaction
-    const callValidate = await flw.Charge.validate({
-      otp: "12345",
-      flw_ref: reCallCharge.data.flw_ref,
-    });
-    res.status(200).json({
-      staus: succesfully,
-      message: " your payment is successful",
-      order,
+      // Add the OTP to authorize the transaction
+      const callValidate = await flw.Charge.validate({
+        otp: "12345",
+        flw_ref: reCallCharge.data.flw_ref,
+      });
+      if (callValidate.status === "success") {
+        res.status(200).json({
+          status: "succesfull",
+          message: " your payment is successful",
+          order,
+        });
+        await Order.findByIdAndDelete(order._id);
+      }
+    }
+    return response;
+  } else {
+    return res.status(400).json({
+      message: "No Order is found",
     });
   }
-  return response;
 });

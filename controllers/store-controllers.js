@@ -2,7 +2,6 @@ const User = require("../models/User-model");
 const Store = require("../models/store-model");
 const Product = require("../models/product-model");
 const multer = require("multer");
-
 const CatchAsync = require("../utils/catch-async");
 const cloudinary = require("cloudinary");
 const QueryMethod = require("../utils/query.js");
@@ -96,7 +95,6 @@ const createStore = CatchAsync(async (req, res, next) => {
 });
 
 const updateStore = CatchAsync(async (req, res, next) => {
-  // only store owners can edit the store
   const { storeID } = req.params;
   const userID = req.user._id;
   const store = await Store.findById(storeID);

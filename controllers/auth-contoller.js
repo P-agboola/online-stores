@@ -112,6 +112,8 @@ exports.restrictTo = (...roles) => {
   };
 };
 
+// exports.validateStoreAndUser = CatchAsync(async (req, res, next) => {});
+
 exports.forgotPassword = CatchAsync(async (req, res, next) => {
   // 1. Get User based on posted email
   const user = await User.findOne({ email: req.body.email });
